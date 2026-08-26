@@ -120,7 +120,7 @@ document.getElementById('saveBtn').addEventListener('click', () => {
         } else {
             // パスワードを書いていないので、初回だけ「あなたは本物ですか？」の安全な認証画面に優しくジャンプさせます
             alert("安全な連動を開始するため、1度だけGitHubの認証を行います。");
-            window.location.href = `https://github.com`;
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=Ov23linEGDzqnxpRANnO`;
         }
     })
     .catch(() => alert("通信エラーが発生しました。"))
