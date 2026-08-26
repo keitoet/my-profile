@@ -18,6 +18,7 @@ header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; fon
 .bio-text { font-size: 15px; color: #4a5568; line-height: 1.8; margin: 0; }
 .tags-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
 .status-tag { font-size: 13px; color: #3182ce; font-weight: bold; white-space: nowrap; }
+.rule-item { font-size: 14px; color: #4a5568; background: #f7fafc; padding: 10px 16px; border-radius: 6px; border: 1px solid #edf2f7; font-weight: bold; }
 .full-width-divider { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; border-top: 1px solid #e2e8f0; margin-bottom: 40px; }
 .section { margin-bottom: 45px; text-align: left; }
 .section-title { font-size: 16px; color: #1a202c; font-weight: bold; border-bottom: 1px solid #1a202c; padding-bottom: 10px; margin-bottom: 20px; }
