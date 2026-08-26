@@ -50,8 +50,8 @@
             </div>
 
             <div class="control-group">
-                <div class="control-label">3. 最近の出来事を更新</div>
-                <input type="text" id="inputNews" class="input-text" value="今日から新しい彼氏ができました！大切にします。">
+                <div class="control-label">3. 最近の出来事を追加</div>
+                <input type="text" id="inputNews" class="input-text" value="">
             </div>
 
             <button id="saveBtn" class="save-btn">変更を保存して反映する</button>
@@ -59,26 +59,7 @@
     </div>
 
     <script>
-        const MASTER_KEY = "my_status_owner_secret_token_123456";
-        
-        function checkFirstTime() {
-            if (!localStorage.getItem('admin_token')) {
-                const check = confirm("このスマホに管理人用カード（二重ロック解除）をセットしますか？\n（あなたのスマホ以外でこれが出た人は、ボタンが1ミリも動きません）");
-                if (check) {
-                    localStorage.setItem('admin_token', MASTER_KEY);
-                    alert("セット完了！このスマホからのみ操作可能になりました。");
-                }
-            }
-        }
-        window.onload = checkFirstTime;
-
         document.getElementById('saveBtn').addEventListener('click', () => {
-            const currentToken = localStorage.getItem('admin_token');
-            if (currentToken !== MASTER_KEY) {
-                alert("エラー：あなたのスマホ（端末）からしかこのボタンは操作できません！");
-                return;
-            }
-
             const status = document.querySelector('input[name="status"]:checked').value;
             const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
             const newsText = document.getElementById('inputNews').value;
@@ -86,10 +67,18 @@
             let isOnline = status === "online" ? "true" : "false";
             let formattedTags = JSON.stringify(tags);
 
-            // 💡 あなたのスマホの引き出し（localStorage）に最新の状態を1秒で直書き保存する仕組み
+            // ポップアップなどの無駄なチェックを一切せず、1秒で直接データを保存
             localStorage.setItem('mystatus_isOnline', isOnline);
             localStorage.setItem('mystatus_tags', formattedTags);
-            localStorage.setItem('mystatus_news', newsText);
+
+            // 新しい出来事が入力されている場合、上にどんどん蓄積して保存
+            if(newsText.trim() !== "") {
+                const currentDate = new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//g, '.');
+                let currentHistory = localStorage.getItem('mystatus_news_history') || "";
+                let newEntry = `<li><span class="notice-date">${currentDate}</span><span class="notice-text">${newsText}</span></li>`;
+                localStorage.setItem('mystatus_news_history', newEntry + currentHistory);
+                document.getElementById('inputNews').value = ""; // 入力欄を空にする
+            }
             
             alert("反映完了！フォロワーの画面が最新に切り替わりました。");
         });
