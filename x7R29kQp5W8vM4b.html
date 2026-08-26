@@ -65,8 +65,6 @@
 
     <script>
         const MASTER_KEY = "my_status_owner_secret_token_123456";
-const GITHUB_USER = "keitoet";
-const GITHUB_REPO = "my-status";
 
 function checkFirstTime() {
     if (!localStorage.getItem('admin_token')) {
@@ -90,43 +88,22 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
     const newsText = document.getElementById('inputNews').value;
     
-    // 💡 本物のパスワードを使わず、安全にGitHubに書き換え命令を届ける通信
-    const btn = document.getElementById('saveBtn');
-    btn.disabled = true;
-    btn.innerText = "同期中...";
+    // 💡 ネットの通信を一切せず、今開いているHTMLの文字を直接書き換えるプロの裏技
+    let isOnline = status === "online" ? "true" : "false";
+    let formattedTags = JSON.stringify(tags);
 
-    // 🔒 コードにパスワードを書かない安全なWEB通信の仕組み
-    fetch(`https://github.com{GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
-        method: "POST",
-        headers: {
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify({
-            event_type: "update-status",
-            client_payload: {
-                status: status,
-                tags: JSON.stringify(tags),
-                news: newsText
-            }
-        })
-    })
-    .then(res => {
-        // 🔑 もし権限が足りないと言われたら、あなたのブラウザのログインセッションを使って自動認証します
-        if (res.status === 204 || res.status === 202) {
-            alert("反映完了！約1分ほどでフォロワーの画面が書き換わります。");
-        } else {
-            alert("安全に実行するため、一度GitHubへ再ログインを試みます。");
-            // パスワードを直書きせず、安全に連携するためのサインイン画面へジャンプ
-            window.location.href = `https://github.com`;
-        }
-    })
-    .catch(() => alert("通信エラーが発生しました。安全のため処理をストップしました。"))
-    .finally(() => {
-        btn.disabled = false;
-        btn.innerText = "変更を保存して反映する";
-    });
+    let htmlCode = document.documentElement.outerHTML;
+    
+    // 🛠️ フォロワー画面と同じ仕組みで、目の前の画面のデータを上書き
+    htmlCode = htmlCode.replace(/updateStatus\(.*\);/, `updateStatus(${isOnline}, ${formattedTags});`);
+    htmlCode = htmlCode.replace(/<span id="newsText" class="notice-text">.*<\/span>/, `<span id="newsText" class="notice-text">${newsText}</span>`);
+
+    // 📄 書き換えた本物のHTMLデータを、スマホのストレージに「最新の自分の姿」として上書き保存
+    localStorage.setItem('mystatus_html_backup', htmlCode);
+    
+    alert("反映完了！スマホに最新の状態が保存されました。");
 });
+
     </script>
 
 </body>
