@@ -16,6 +16,7 @@ jobs:
           STATUS="${{ github.event.client_payload.status }}"
           TAGS='${{ github.event.client_payload.tags }}'
           NEWS="${{ github.event.client_payload.news }}"
+          CURRENT_DATE=$(date +'%Y.%m.%d')
           
           if [ "$STATUS" = "online" ]; then
             SED_STATUS="true"
@@ -23,13 +24,19 @@ jobs:
             SED_STATUS="false"
           fi
           
+          # ① ハッシュタグを確実に書き換える
           sed -i "s/updateStatus(.*);/updateStatus($SED_STATUS, $TAGS);/g" index.html
-          sed -i 's|<span id="newsText" class="notice-text">.*</span>|<span id="newsText" class="notice-text">'"$NEWS"'</span>|g' index.html
+          
+          # ② 古い出来事を消さずに、新しい出来事を一番上にどんどん蓄積（追加）していく魔法の処理
+          if [ -n "$NEWS" ]; then
+            NEW_LINE="        <li><span class=\"notice-date\">$CURRENT_DATE<\/span><span class=\"notice-text\">$NEWS<\/span><\/li>"
+            sed -i "s|<ul id=\"newsList\" class=\"notice-list\">|<ul id=\"newsList\" class=\"notice-list\">\n$NEW_LINE|g" index.html
+          fi
 
       - name: Commit and Push
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add index.html
-          git commit -m "Update status via admin panel"
+          git commit -m "Update status and accumulate news via admin panel"
           git push
