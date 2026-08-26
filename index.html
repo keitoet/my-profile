@@ -91,16 +91,11 @@
     </footer>
 
 <script>
-    function loadStatus() {
-        const isOnline = localStorage.getItem('mystatus_isOnline') !== 'false';
-        const tagsData = localStorage.getItem('mystatus_tags');
-        const newsHistory = localStorage.getItem('mystatus_news_history');
-
+    function updateStatus(isOnline) {
         const avatarContainer = document.getElementById('avatarContainer');
         const statusBadge = document.getElementById('statusBadge');
-        const tagsContainer = document.getElementById('tagsContainer');
-        const newsList = document.getElementById('newsList');
-
+        
+        // 💡 ロボットがここを自動で書き換えることで、色とバッジが一瞬で切り替わります
         if(isOnline) {
             avatarContainer.className = "avatar-container online";
             statusBadge.innerHTML = '<span class="dot"></span>はなせる';
@@ -108,18 +103,11 @@
             avatarContainer.className = "avatar-container offline";
             statusBadge.innerHTML = '<span class="dot"></span>ねてる';
         }
-
-        if(tagsData) {
-            const tags = JSON.parse(tagsData);
-            tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
-        }
-
-        if(newsHistory && newsList) {
-            newsList.innerHTML = newsHistory;
-        }
     }
-    window.onload = loadStatus;
+    // 💡 最初は「はなせる（true）」にしておきます
+    updateStatus(true);
 </script>
+
 
 
 </body>
