@@ -91,11 +91,14 @@
     </footer>
 
 <script>
+    // 💡 あなたの「status.json」のファイルを読み込みます（毎回最新の状態を取るための対策付き）
+    const STATUS_FILE_URL = 'status.json?t=' + new Date().getTime();
+
+    // 💡 元々あった切り替えの命令（そのまま使っています！）
     function updateStatus(isOnline) {
         const avatarContainer = document.getElementById('avatarContainer');
         const statusBadge = document.getElementById('statusBadge');
         
-        // 💡 ロボットがここを自動で書き換えることで、色とバッジが一瞬で切り替わります
         if(isOnline) {
             avatarContainer.className = "avatar-container online";
             statusBadge.innerHTML = '<span class="dot"></span>はなせる';
@@ -104,11 +107,25 @@
             statusBadge.innerHTML = '<span class="dot"></span>ねてる';
         }
     }
-    // 💡 最初は「はなせる（true）」にしておきます
-    updateStatus(true);
+
+    // 💡 インターネット上の status.json を見に行って、自動で判定する命令
+    async function fetchAndApplyStatus() {
+        try {
+            const response = await fetch(STATUS_FILE_URL);
+            const data = await response.json();
+            
+            // jsonの中身が "true" だったら true、それ以外（"false"など）なら false を渡す
+            const isOnline = (data.status === "true");
+            updateStatus(isOnline);
+        } catch (error) {
+            console.error("ステータスの読み込みに失敗しました。最初の状態（true）にします:", error);
+            updateStatus(true); // エラーが起きたらとりあえず「はなせる」にしておく
+        }
+    }
+
+    // 💡 ページが開かれた瞬間に、上のチェックを自動で実行する
+    fetchAndApplyStatus();
 </script>
-
-
 
 </body>
 </html>
