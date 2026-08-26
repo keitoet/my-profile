@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Status - Admin</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #f4f5f7; color: #333333; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: #ffffff; padding: 25px 40px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 24px; color: #1a202c; letter-spacing: 2px; font-weight: bold; }
+        .admin-badge { background-color: #e2e8f0; color: #4a5568; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .main-container { max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px; box-sizing: border-box; flex: 1; }
+        .control-panel { background-color: #fff; border: 2px solid #e2e8f0; border-radius: 8px; padding: 30px; margin-bottom: 40px; text-align: left; }
+        .panel-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #1a202c; }
+        .control-group { margin-bottom: 25px; }
+        .control-label { font-size: 14px; font-weight: bold; color: #4a5568; margin-bottom: 10px; }
+        .radio-group { display: flex; gap: 15px; }
+        .radio-label { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: bold; cursor: pointer; background: #f7fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; flex: 1; transition: all 0.2s; box-sizing: border-box; }
+        .radio-label:hover { background: #edf2f7; }
+        .radio-label input { width: 18px; height: 18px; cursor: pointer; }
+        .input-text { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 14px; box-sizing: border-box; background: #f7fafc; }
+        .input-text:focus { border-color: #3182ce; background: #fff; outline: none; }
+        .save-btn { width: 100%; padding: 15px; background-color: #3182ce; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .save-btn:hover { background-color: #2b6cb0; }
+        .save-btn:active { transform: scale(0.99); }
+        .validator-btn { display: block; text-align: center; margin-top: 15px; padding: 12px; background-color: #1d9bf0; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; font-size: 14px; }
+        .validator-btn:hover { background-color: #1a8cd8; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>MY STATUS</h1>
+        <span class="admin-badge">ADMIN MODE</span>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="control-panel">
+            <div class="panel-title">⚙️ ステータス＆ニュース管理</div>
+            
+            <div class="control-group">
+                <div class="control-label">1. 今の状態を選択</div>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="status" value="online" checked>🟢 はなせる</label>
+                    <label class="radio-label"><input type="radio" name="status" value="offline">🔴 ねてる</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">2. ハッシュタグ（カンマ区切りで入力）</div>
+                <input type="text" id="inputTags" class="input-text" value="暇つぶし,ねむい,カカオおる">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">3. 最近の出来事を更新</div>
+                <input type="text" id="inputNews" class="input-text" value="今日から新しい彼氏ができました！大切にします。">
+            </div>
+
+            <button id="saveBtn" class="save-btn">変更を保存して反映する</button>
+            <a href="https://cards-dev.x.com/validator" target="_blank" class="validator-btn">X（Twitter）の画像を最新に更新する（Card Validator）</a>
+        </div>
+
+    </div>
+
+    <script>
+        const MASTER_KEY = "my_status_owner_secret_token_123456";
+        const GITHUB_USER = "keitoet";
+        const GITHUB_REPO = "my-status";
+        const GITHUB_TOKEN = "github_pat_11BJMVTGY078NfV68B0h8k_L5v7Hh1v8rK9P2XmQ4Z3W5S6D7F8G9H0J1K2L3M4N5O";
+
+        function checkFirstTime() {
+            if (!localStorage.getItem('admin_token')) {
+                const check = confirm("このスマホに管理人用カード（二重ロック解除）をセットしますか？\n（あなたのスマホ以外でこれが出た人は、ボタンが1ミリも動きません）");
+                if (check) {
+                    localStorage.setItem('admin_token', MASTER_KEY);
+                    alert("セット完了！このスマホからのみ操作可能になりました。");
+                }
+            }
+        }
+        window.onload = checkFirstTime;
+
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const currentToken = localStorage.getItem('admin_token');
+            if (currentToken !== MASTER_KEY) {
+                alert("エラー：あなたのスマホ（端末）からしかこのボタンは操作できません！");
+                return;
+            }
+
+            const status = document.querySelector('input[name="status"]:checked').value;
+            const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
+            const newsText = document.getElementById('inputNews').value;
+            
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true;
+            btn.innerText = "同期中...";
+
+            fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    event_type: "update-status",
+                    client_payload: {
+                        status: status,
+                        tags: JSON.stringify(tags),
+                        news: newsText
+                    }
+                })
+            })
+            .then(res => {
+                if (res.status === 204) {
+                    alert("反映完了！約1分ほどでフォロワーの画面が書き換わります。");
+                } else {
+                    alert("通信エラーが発生しました。");
+                }
+            })
+            .catch(() => alert("通信エラーが発生しました。"))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "変更を保存して反映する";
+            });
+        });
+    </script>
+
+</body>
+</html>
