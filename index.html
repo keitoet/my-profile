@@ -104,10 +104,9 @@
         }
         tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
     }
-    // 💡 最初は「はなせる」状態にしておきます（ここをロボットが自動で書き換えます）
+    // 💡 この下の1行を、裏側でロボットが毎回パチパチ自動書き換えします
     updateStatus(true, ["暇つぶし", "ねむい", "カカオおる"]);
 </script>
-
 
 </body>
 </html>
