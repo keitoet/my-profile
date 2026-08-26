@@ -91,10 +91,16 @@
     </footer>
 
 <script>
-    function updateStatus(isOnline, tags) {
+    function loadStatus() {
+        const isOnline = localStorage.getItem('mystatus_isOnline') !== 'false';
+        const tagsData = localStorage.getItem('mystatus_tags');
+        const newsHistory = localStorage.getItem('mystatus_news_history');
+
         const avatarContainer = document.getElementById('avatarContainer');
         const statusBadge = document.getElementById('statusBadge');
         const tagsContainer = document.getElementById('tagsContainer');
+        const newsList = document.getElementById('newsList');
+
         if(isOnline) {
             avatarContainer.className = "avatar-container online";
             statusBadge.innerHTML = '<span class="dot"></span>はなせる';
@@ -102,11 +108,19 @@
             avatarContainer.className = "avatar-container offline";
             statusBadge.innerHTML = '<span class="dot"></span>ねてる';
         }
-        tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+
+        if(tagsData) {
+            const tags = JSON.parse(tagsData);
+            tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+        }
+
+        if(newsHistory && newsList) {
+            newsList.innerHTML = newsHistory;
+        }
     }
-    // 💡 この下の1行を、裏側でロボットが毎回パチパチ自動書き換えします
-    updateStatus(true, ["暇つぶし", "ねむい", "カカオおる"]);
+    window.onload = loadStatus;
 </script>
+
 
 </body>
 </html>
