@@ -90,20 +90,36 @@
     </footer>
 
     <script>
-        const avatarContainer = document.getElementById('avatarContainer');
-        const statusBadge = document.getElementById('statusBadge');
-        const tagsContainer = document.getElementById('tagsContainer');
-        function updateStatus(isOnline, tags) {
-            if(isOnline) {
-                avatarContainer.className = "avatar-container online";
-                statusBadge.innerHTML = '<span class="dot"></span>はなせる';
-            } else {
-                avatarContainer.className = "avatar-container offline";
-                statusBadge.innerHTML = '<span class="dot"></span>ねてる';
-            }
-            tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
-        }
-        updateStatus(true, ["暇つぶし", "ねむい", "カカオおる"]);
+function loadStatus() {
+    const isOnline = localStorage.getItem('mystatus_isOnline') === 'true';
+    const tagsData = localStorage.getItem('mystatus_tags');
+    const news = localStorage.getItem('mystatus_news');
+
+    const avatarContainer = document.getElementById('avatarContainer');
+    const statusBadge = document.getElementById('statusBadge');
+    const tagsContainer = document.getElementById('tagsContainer');
+    const newsText = document.getElementById('newsText');
+
+    if(isOnline) {
+        avatarContainer.className = "avatar-container online";
+        statusBadge.innerHTML = '<span class="dot"></span>はなせる';
+    } else {
+        avatarContainer.className = "avatar-container offline";
+        statusBadge.innerHTML = '<span class="dot"></span>ねてる';
+    }
+
+    if(tagsData) {
+        const tags = JSON.parse(tagsData);
+        tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+    }
+
+    if(news && newsText) {
+        newsText.innerText = news;
+    }
+}
+// 💡 ページを開いた瞬間に、管理画面で保存したデータを自動で読み込んで画面を切り替える
+window.onload = loadStatus;
+
     </script>
 
 </body>
