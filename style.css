@@ -5,7 +5,7 @@ header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; fon
 .profile-section { display: flex; gap: 40px; align-items: flex-start; padding-bottom: 40px; }
 @media (max-width: 600px) { .profile-section { flex-direction: column; align-items: flex-start; gap: 20px; } }
 .avatar-container { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; }
-.avatar { width: 140px; height: 140px; border-radius: 50%; background: #cbd5e1; background-image: url('あなたのTwitterアイコン画像URL'); background-size: cover; box-sizing: border-box; transition: all 0.3s ease; }
+.avatar { width: 140px; height: 140px; border-radius: 50%; background: #cbd5e1; background-image: url('keito.jpg'); background-size: cover; box-sizing: border-box; transition: all 0.3s ease; }
 .avatar-container.online .avatar { border: 5px solid #22c55e; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
 .avatar-container.offline .avatar { border: 5px solid #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.1); }
 .status-badge { font-size: 12px; font-weight: bold; padding: 4px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; }
