@@ -8,45 +8,7 @@
     <meta property="og:description" content="Status Portal">
     <meta property="og:image" content="https://raw.githubusercontent.com/username/repository/main/status.png">
     <meta name="twitter:card" content="summary_large_image">
-    <style>
-        body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #ffffff; color: #333333; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        header { background-color: #ffffff; padding: 25px 40px; border-bottom: 1px solid #e2e8f0; }
-        header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; font-weight: bold; max-width: 1000px; margin: 0 auto; text-align: left; }
-        .main-container { max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 40px; box-sizing: border-box; flex: 1; }
-        .profile-section { display: flex; gap: 40px; align-items: flex-start; padding-bottom: 40px; }
-        @media (max-width: 600px) { .profile-section { flex-direction: column; align-items: flex-start; gap: 20px; } }
-        .avatar-container { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; }
-        .avatar { width: 140px; height: 140px; border-radius: 50%; background: #cbd5e1; background-image: url('あなたのTwitterアイコン画像URL'); background-size: cover; box-sizing: border-box; transition: all 0.3s ease; }
-        .avatar-container.online .avatar { border: 5px solid #22c55e; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
-        .avatar-container.offline .avatar { border: 5px solid #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.1); }
-        .status-badge { font-size: 12px; font-weight: bold; padding: 4px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; }
-        .avatar-container.online .status-badge { background-color: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
-        .avatar-container.offline .status-badge { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-        .avatar-container.online .dot { background-color: #22c55e; }
-        .avatar-container.offline .dot { background-color: #ef4444; }
-        .profile-text { flex: 1; text-align: left; }
-        .name { font-size: 28px; font-weight: bold; margin: 0 0 15px 0; color: #1a202c; }
-        .bio-text { font-size: 15px; color: #4a5568; line-height: 1.8; margin: 0; }
-        .tags-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-        .status-tag { font-size: 13px; color: #3182ce; font-weight: bold; white-space: nowrap; }
-        .full-width-divider { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; border-top: 1px solid #e2e8f0; margin-bottom: 40px; }
-        .section { margin-bottom: 45px; text-align: left; }
-        .section-title { font-size: 16px; color: #1a202c; font-weight: bold; border-bottom: 1px solid #1a202c; padding-bottom: 10px; margin-bottom: 20px; }
-        .notice-list { list-style: none; padding: 0; margin: 0; }
-        .notice-list li { padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 14px; display: flex; align-items: flex-start; }
-        .notice-list li:last-child { border: none; }
-        .notice-date { color: #718096; font-weight: bold; margin-right: 25px; font-size: 13px; }
-        .notice-text { flex: 1; color: #2d3748; }
-        .rules-grid { display: flex; gap: 12px; flex-wrap: wrap; }
-        .rule-item { font-size: 14px; color: #4a5568; background: #f7fafc; padding: 10px 16px; border-radius: 6px; border: 1px solid #edf2f7; font-weight: bold; }
-        .links-grid { display: flex; gap: 15px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; color: #4a5568; text-decoration: none; font-weight: bold; border-radius: 6px; transition: all 0.2s; font-size: 14px; background: #f7fafc; border: 1px solid #e2e8f0; }
-        .btn:hover { background: #edf2f7; color: #1a202c; }
-        .btn.wish-link { background-color: #fffaf0; color: #dd6b20; border-color: #fbd38d; }
-        .alert-text { font-size: 14px; color: #e53e3e; background-color: #fff5f5; border: 1px solid #fed7d7; padding: 15px 20px; border-radius: 6px; line-height: 1.7; max-width: 600px; }
-        footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; border-top: 1px solid #e2e8f0; background-color: #ffffff; margin-top: auto; }
-    </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -79,8 +41,7 @@
         <div class="section">
             <div class="section-title">最近の出来事</div>
             <ul class="notice-list">
-                <li><span class="notice-date">2026.08.26</span><span class="notice-text">今日から新しい彼氏ができました！大切にします。</span></li>
-                <li><span class="notice-date">2026.08.26</span><span class="notice-text">ホームページを開設しました。</span></li>
+                <li><span class="notice-date">2026.08.26</span><span class="notice-text">マイステータスを開設しました。</span></li>
             </ul>
         </div>
 
@@ -95,27 +56,33 @@
         </div>
 
         <div class="section">
-            <div class="section-title">SNSリンク</div>
+            <div class="section-title">各SNSリンク</div>
+              <p class="sns-alert">
+        ※このID以外は俺が管理しているものではありません。また、KakaoTalkは仕様上リンクを貼れないので、ID検索してください。
+    </p>
             <div class="links-grid">
-                <a href="https://x.com/keitoott" class="btn" target="_blank">X (Twitter)</a>
-                <a href="https://www.instagram.com/keitonkoro" class="btn" target="_blank">Instagram</a>
-                <a href="https://qr.kakao.com/talk/1y72s9jrfMu62xoYNFVkdgMvRpo-" class="btn" target="_blank">KakaoTalk</a>
+                <a href="https://x.com/keitoott" class="btn" target="_blank">X（@keitoott）</a>
+                <a href="https://www.instagram.com/keitonkoro" class="btn" target="_blank">Instagram（@keitonkoro）</a>
+                <a href="https://qr.kakao.com/talk/1y72s9jrfMu62xoYNFVkdgMvRpo-" class="btn" target="_blank">KakaoTalk（@keitoet）</a>
             </div>
         </div>
 
         <div class="section">
             <div class="section-title">アカウント凍結時の案内</div>
             <div class="alert-text">
-                もしX（Twitter）のアカウントが凍結した場合は、上記の「Instagram」か「KakaoTalk」に直接メッセージを飛ばしてください！そっちで連絡が取れます。
+                もしX（Twitter）のアカウント等が凍結した場合は、上記の「Instagram」か「KakaoTalk」に直接メッセージをください！そっちで連絡が取れます。
             </div>
         </div>
+      
+      <div class="section">
+        <div class="section-title">お気に入り</div>
+        <p style="font-size: 14px; color: #4a5568; line-height: 1.7; margin: 0 0 15px 0;">
+          俺の欲しいものリストです。</p>
+        <div class="links-grid">
+          <a href="あなたの手作りほしいもの図鑑のURL" class="btn wish-link" target="_blank">🎁 ほしいもの図鑑</a>
+        </div> 
+      </div>
 
-        <div class="section">
-            <div class="section-title">お気に入り</div>
-            <div class="links-grid">
-                <a href="あなたの手作りほしいもの図鑑のURL" class="btn wish-link" target="_blank">🎁 ほしいもの図鑑</a>
-            </div>
-        </div>
 
     </div>
 
