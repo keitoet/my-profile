@@ -20,8 +20,8 @@
         .radio-label input { width: 18px; height: 18px; cursor: pointer; }
         .input-text { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 14px; box-sizing: border-box; background: #f7fafc; }
         .input-text:focus { border-color: #3182ce; background: #fff; outline: none; }
-        .save-btn { width: 100%; padding: 15px; background-color: #22c55e; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        .save-btn:hover { background-color: #16a34a; }
+        .save-btn { width: 100%; padding: 15px; background-color: #3182ce; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .save-btn:hover { background-color: #2b6cb0; }
         .save-btn:active { transform: scale(0.99); }
     </style>
 </head>
@@ -50,7 +50,7 @@
             </div>
 
             <div class="control-group">
-                <div class="control-label">3. 最近の出来事を追加</div>
+                <div class="control-label">3. 最近の出来事を追加（一番上にどんどん蓄積されるよ）</div>
                 <input type="text" id="inputNews" class="input-text" value="">
             </div>
 
@@ -59,28 +59,58 @@
     </div>
 
     <script>
+        const GITHUB_USER = "keitoet";
+        const GITHUB_REPO = "my-status";
+        const CLIENT_ID = "Ov23linEGDzqnxpRANnO";
+
         document.getElementById('saveBtn').addEventListener('click', () => {
             const status = document.querySelector('input[name="status"]:checked').value;
             const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
             const newsText = document.getElementById('inputNews').value;
             
-            let isOnline = status === "online" ? "true" : "false";
-            let formattedTags = JSON.stringify(tags);
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true;
+            btn.innerText = "同期中...";
 
-            // ポップアップなどの無駄なチェックを一切せず、1秒で直接データを保存
-            localStorage.setItem('mystatus_isOnline', isOnline);
-            localStorage.setItem('mystatus_tags', formattedTags);
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
 
-            // 新しい出来事が入力されている場合、上にどんどん蓄積して保存
-            if(newsText.trim() !== "") {
-                const currentDate = new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//g, '.');
-                let currentHistory = localStorage.getItem('mystatus_news_history') || "";
-                let newEntry = `<li><span class="notice-date">${currentDate}</span><span class="notice-text">${newsText}</span></li>`;
-                localStorage.setItem('mystatus_news_history', newEntry + currentHistory);
-                document.getElementById('inputNews').value = ""; // 入力欄を空にする
+            // 💡 認証がまだの場合は1回だけジャンプ、通過済みの場合はそのまま通信
+            if (!code) {
+                window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo&redirect_uri=${encodeURIComponent(window.location.href)}`;
+                return;
             }
-            
-            alert("反映完了！フォロワーの画面が最新に切り替わりました。");
+
+            fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/vnd.github.v3+json",
+                    "Authorization": `token ${code}`
+                },
+                body: JSON.stringify({
+                    event_type: "update-status",
+                    client_payload: {
+                        status: status,
+                        tags: JSON.stringify(tags),
+                        news: newsText
+                    }
+                })
+            })
+            .then(res => {
+                if (res.status === 204 || res.status === 202) {
+                    alert("反映完了！約1分ほどでフォロワーの画面が自動で書き換わります。");
+                    document.getElementById('inputNews').value = ""; // 入力欄を空にする
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    window.location.href = window.location.pathname;
+                }
+            })
+            .catch(() => alert("通信エラーが発生しました。"))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "変更を保存して反映する";
+            });
         });
     </script>
 
