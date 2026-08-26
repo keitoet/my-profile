@@ -20,11 +20,9 @@
         .radio-label input { width: 18px; height: 18px; cursor: pointer; }
         .input-text { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 14px; box-sizing: border-box; background: #f7fafc; }
         .input-text:focus { border-color: #3182ce; background: #fff; outline: none; }
-        .save-btn { width: 100%; padding: 15px; background-color: #3182ce; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        .save-btn:hover { background-color: #2b6cb0; }
+        .save-btn { width: 100%; padding: 15px; background-color: #22c55e; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .save-btn:hover { background-color: #16a34a; }
         .save-btn:active { transform: scale(0.99); }
-        .validator-btn { display: block; text-align: center; margin-top: 15px; padding: 12px; background-color: #1d9bf0; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; font-size: 14px; }
-        .validator-btn:hover { background-color: #1a8cd8; }
     </style>
 </head>
 <body>
@@ -35,7 +33,6 @@
     </header>
 
     <div class="main-container">
-        
         <div class="control-panel">
             <div class="panel-title">⚙️ ステータス＆ニュース管理</div>
             
@@ -58,78 +55,44 @@
             </div>
 
             <button id="saveBtn" class="save-btn">変更を保存して反映する</button>
-            <a href="https://cards-dev.x.com/validator" target="_blank" class="validator-btn">X（Twitter）の画像を最新に更新する（Card Validator）</a>
         </div>
-
     </div>
 
     <script>
-       const MASTER_KEY = "my_status_owner_secret_token_123456";
-const GITHUB_USER = "keitoet";
-const GITHUB_REPO = "my-status";
-
-function checkFirstTime() {
-    if (!localStorage.getItem('admin_token')) {
-        const check = confirm("このスマホに管理人用カード（二重ロック解除）をセットしますか？\n（あなたのスマホ以外でこれが出た人は、ボタンが1ミリも動きません）");
-        if (check) {
-            localStorage.setItem('admin_token', MASTER_KEY);
-            alert("セット完了！このスマホからのみ操作可能になりました。");
-        }
-    }
-}
-window.onload = checkFirstTime;
-
-document.getElementById('saveBtn').addEventListener('click', () => {
-    const currentToken = localStorage.getItem('admin_token');
-    if (currentToken !== MASTER_KEY) {
-        alert("エラー：あなたのスマホ（端末）からしかこのボタンは操作できません！");
-        return;
-    }
-
-    const status = document.querySelector('input[name="status"]:checked').value;
-    const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
-    const newsText = document.getElementById('inputNews').value;
-    
-    const btn = document.getElementById('saveBtn');
-    btn.disabled = true;
-    btn.innerText = "同期中...";
-
-    let isOnline = status === "online" ? "true" : "false";
-    let formattedTags = JSON.stringify(tags);
-
-    // 💡 あなたの「ブラウザのログイン状態」を使って、パスワード無しで安全にGitHubのロボットを動かす特別な通信
-    fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
-        method: "POST",
-        headers: {
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify({
-            event_type: "update-status",
-            client_payload: {
-                status: status,
-                tags: formattedTags,
-                news: newsText
+        const MASTER_KEY = "my_status_owner_secret_token_123456";
+        
+        function checkFirstTime() {
+            if (!localStorage.getItem('admin_token')) {
+                const check = confirm("このスマホに管理人用カード（二重ロック解除）をセットしますか？\n（あなたのスマホ以外でこれが出た人は、ボタンが1ミリも動きません）");
+                if (check) {
+                    localStorage.setItem('admin_token', MASTER_KEY);
+                    alert("セット完了！このスマホからのみ操作可能になりました。");
+                }
             }
-        })
-    })
-    .then(res => {
-        // 🚀 ロボット（GitHub Actions）への命令送信が成功した場合
-        if (res.status === 204 || res.status === 202) {
-            alert("反映完了！約1分ほどでフォロワーの画面が自動で書き換わります。");
-        } else {
-            // パスワードを書いていないので、初回だけ「あなたは本物ですか？」の安全な認証画面に優しくジャンプさせます
-            alert("安全な連動を開始するため、1度だけGitHubの認証を行います。");
-            window.location.href = `https://github.com/login/oauth/authorize?client_id=Ov23linEGDzqnxpRANnO`;
         }
-    })
-    .catch(() => alert("通信エラーが発生しました。"))
-    .finally(() => {
-        btn.disabled = false;
-        btn.innerText = "変更を保存して反映する";
-    });
-});
+        window.onload = checkFirstTime;
 
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const currentToken = localStorage.getItem('admin_token');
+            if (currentToken !== MASTER_KEY) {
+                alert("エラー：あなたのスマホ（端末）からしかこのボタンは操作できません！");
+                return;
+            }
+
+            const status = document.querySelector('input[name="status"]:checked').value;
+            const tags = document.getElementById('inputTags').value.split(',').map(t => t.trim());
+            const newsText = document.getElementById('inputNews').value;
+            
+            let isOnline = status === "online" ? "true" : "false";
+            let formattedTags = JSON.stringify(tags);
+
+            // 💡 あなたのスマホの引き出し（localStorage）に最新の状態を1秒で直書き保存する仕組み
+            localStorage.setItem('mystatus_isOnline', isOnline);
+            localStorage.setItem('mystatus_tags', formattedTags);
+            localStorage.setItem('mystatus_news', newsText);
+            
+            alert("反映完了！フォロワーの画面が最新に切り替わりました。");
+        });
     </script>
 
 </body>
