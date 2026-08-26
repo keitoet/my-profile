@@ -4,6 +4,9 @@ on:
   repository_dispatch:
     types: [update-status]
 
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -24,10 +27,8 @@ jobs:
             SED_STATUS="false"
           fi
           
-          # ① ハッシュタグを確実に書き換える
           sed -i "s/updateStatus(.*);/updateStatus($SED_STATUS, $TAGS);/g" index.html
           
-          # ② 古い出来事を消さずに、新しい出来事を一番上にどんどん蓄積（追加）していく魔法の処理
           if [ -n "$NEWS" ]; then
             NEW_LINE="        <li><span class=\"notice-date\">$CURRENT_DATE<\/span><span class=\"notice-text\">$NEWS<\/span><\/li>"
             sed -i "s|<ul id=\"newsList\" class=\"notice-list\">|<ul id=\"newsList\" class=\"notice-list\">\n$NEW_LINE|g" index.html
