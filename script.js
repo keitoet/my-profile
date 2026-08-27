@@ -43,8 +43,8 @@ function loadNewsFromJson() {
             if (newsList && data) {
                 newsList.innerHTML = data.map(item => `
                     <li>
-                        <span class="notice-date">${item.date}</span>
-                        <span class="notice-text">${item.text}</span>
+                        <span class="news-date">${item.date}</span>
+                        <span class="news-text">${item.text}</span>
                     </li>
                 `).join('');
             }
