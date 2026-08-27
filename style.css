@@ -11,7 +11,7 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 .emergency-alert, .section, .bio-detail-list li, .news-date { font-weight: bold; }
 
 /* スマホ対応レイアウト */
-.main-container { max-width: 600px; width: 100%; margin: 0 auto; padding: 40px 20px; box-sizing: border-box; }
+.main-container { max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 20px; box-sizing: border-box; }
 .profile-section { display: flex; gap: 40px; align-items: center; padding-bottom: 40px; justify-content: center; }
 @media (max-width: 600px) { .profile-section { flex-direction: column; gap: 20px; } }
 
