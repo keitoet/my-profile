@@ -1,52 +1,75 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <meta property="og:title" content="My Profile">
-    <meta property="og:description" content="Keito's Profile">
-    <meta property="og:image" content="https://raw.githubusercontent.com/username/repository/main/status.png">
+    <title>MY PROFILE</title>
+    <meta property="og:title" content="MY PROFILE">
+    <meta property="og:description" content="慧斗の現在のステータス・プロフィールポータルサイト">
+    <meta property="og:image" content="https://raw.githubusercontent.com/keitoet/my-profile/main/icon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://keitoet.github.io/my-profile/">
     <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  
+  <body>
+    
     <header>
         <h1>MY PROFILE</h1>
     </header>
+    
+    <!-- emergency-alert -->
+    <div id="emergencyAlert" class="emergency-alert"></div>
 
     <div class="main-container">
-        
-        <div class="profile-section">
-            <div id="avatarContainer" class="avatar-container online">
-                <div class="avatar"></div>
-                <div id="statusBadge" class="status-badge"><span class="dot"></span>はなせる</div>
-            </div>
-            <div class="profile-text">
-                <div class="name">慧斗</div>
-                <p class="bio-text">
-                    高１ / 男 / バイ<br>普段はX、インスタ、カカオで話しています。<br>※下ネタは疲れたので完全NG🙅‍♂️（送ってくるのもダメです）
-                </p>
-                <div id="tagsContainer" class="tags-container">
-                    <span class="status-tag">#暇つぶし</span>
-                    <span class="status-tag">#ねむい</span>
-                    <span class="status-tag">#カカオおる</span>
-                </div>
-            </div>
+    
+    <div class="profile-section">
+
+        <div id="avatarContainer" class="avatar-container" style="opacity: 0; transition: opacity 0.2s;">
+            <div class="avatar"></div>
+            <div id="statusBadge" class="status-badge"></div>
         </div>
+        <div class="profile-text">
+            <div class="name">慧斗</div>
+            <p class="bio-text">高１ / 男 / バイ<br>普段はX、インスタ、カカオで話しています。<br>※下ネタは疲れたので完全NG🙅‍♂️（送ってくるのもダメです。）</p>
+
+            <div id="tagsContainer" class="tags-container"></div>
+        </div>
+    </div>
 
         <div class="full-width-divider"></div>
-        
-        <div class="section">
-            <div class="section-title">最近の出来事</div>
-            <ul id="newsList" class="notice-list">
-                <li><span class="notice-date">2026.08.26</span><span class="notice-text">今日から新しい彼氏ができました！大切にします。</span></li>
-                <li><span class="notice-date">2026.08.26</span><span class="notice-text">ホームページを開設しました。</span></li>
-            </ul>
-        </div>
+      <div class="section">
+        <div class="section-title">自己紹介</div>
+        <ul class="bio-detail-list">
+          <li><span class="detail-item-title">生年月日</span> 2010年8月29日</li>
+          <li><span class="detail-item-title">血液型</span> AB型</li>
+          <li><span class="detail-item-title">趣味</span> ピアノ</li>
+          <li><span class="detail-item-title">部活</span> 軽音部に入部してます。</li>
+        </ul>
+      </div>
 
         <div class="section">
+            <div class="section-title">各SNSリンク</div>
+              <p class="sns-alert">※このID以外は偽物なので注意してください！カカオトークは下のボタンをタップするとQRコード画面が開くので、スキャンして追加をお願いします。</p>
+          
+            <div class="links-grid">
+                <a href="https://x.com/keitoott" class="btn" target="_blank">X（@keitoott）</a>
+                <a href="https://www.instagram.com/keitonkoro" class="btn" target="_blank">Instagram（@keitonkoro）</a>
+                <a href="javascript:void(0);" class="btn" onclick="openQrModal()">KakaoTalk（@keitoet）</a>
+            </div>
+        </div>
+      
+      <div id="qrModal" class="qr-modal" onclick="closeQrModal()">
+        <div class="qr-modal-content" onclick="event.stopPropagation()">
+          <span class="qr-modal-close" onclick="closeQrModal()">&times;</span>
+          <img src="keitoet.jpg" alt="KakaoTalk（@keitoet）" class="qr-modal-img">
+        </div>
+      </div>
+
+      
+              <div class="section">
             <div class="section-title">話しかけるときのお約束</div>
             <div class="rules-grid">
                 <div class="rule-item">❌ 電話NG</div>
@@ -56,24 +79,18 @@
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-title">各SNSリンク</div>
-              <p class="sns-alert">
-        ※ここに載せているID以外は俺のアカウントじゃありません。なりすましに注意してください。また、カカオトークは仕様上ここから直接開けないので、ID検索から追加をお願いします！
-    </p>
-            <div class="links-grid">
-                <a href="https://x.com/keitoott" class="btn" target="_blank">X（@keitoott）</a>
-                <a href="https://www.instagram.com/keitonkoro" class="btn" target="_blank">Instagram（@keitonkoro）</a>
-                <a href="javascript:void(0);" class="btn">KakaoTalk（@keitoet）</a>
-            </div>
-        </div>
 
         <div class="section">
             <div class="section-title">アカウント凍結時の案内</div>
-            <p class="sns-alert">
-                もしX（Twitter）のアカウント等が凍結した場合は、上記の「Instagram」か「KakaoTalk」に直接メッセージをください！そっちで連絡が取れます。
-            </p>
+            <p class="sns-alert">もしX（Twitter）のアカウント等が凍結した場合は、上記の「Instagram」か「KakaoTalk」に直接メッセージをください！そっちで連絡が取れます。</p>
         </div>
+      
+<div class="section">
+    <div class="section-title">最近の出来事</div>
+    <ul id="newsList" class="notice-list">
+
+    </ul>
+</div>
       
       <div class="section">
         <div class="section-title">ほしいもの図鑑</div>
@@ -89,43 +106,6 @@
     <footer>
         <p>&copy; My Profile All Rights Reserved.</p>
     </footer>
-
-<script>
-    // 💡 あなたの「status.json」のファイルを読み込みます（毎回最新の状態を取るための対策付き）
-    const STATUS_FILE_URL = 'status.json?t=' + new Date().getTime();
-
-    // 💡 元々あった切り替えの命令（そのまま使っています！）
-    function updateStatus(isOnline) {
-        const avatarContainer = document.getElementById('avatarContainer');
-        const statusBadge = document.getElementById('statusBadge');
-        
-        if(isOnline) {
-            avatarContainer.className = "avatar-container online";
-            statusBadge.innerHTML = '<span class="dot"></span>はなせる';
-        } else {
-            avatarContainer.className = "avatar-container offline";
-            statusBadge.innerHTML = '<span class="dot"></span>ねてる';
-        }
-    }
-
-    // 💡 インターネット上の status.json を見に行って、自動で判定する命令
-    async function fetchAndApplyStatus() {
-        try {
-            const response = await fetch(STATUS_FILE_URL);
-            const data = await response.json();
-            
-            // jsonの中身が "true" だったら true、それ以外（"false"など）なら false を渡す
-            const isOnline = (data.status === "true");
-            updateStatus(isOnline);
-        } catch (error) {
-            console.error("ステータスの読み込みに失敗しました。最初の状態（true）にします:", error);
-            updateStatus(true); // エラーが起きたらとりあえず「はなせる」にしておく
-        }
-    }
-
-    // 💡 ページが開かれた瞬間に、上のチェックを自動で実行する
-    fetchAndApplyStatus();
-</script>
 
 </body>
 </html>
