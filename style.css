@@ -1,6 +1,7 @@
 body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #ffffff; color: #333333; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
 header { background-color: #ffffff; padding: 25px 40px; border-bottom: 1px solid #e2e8f0; }
 header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; font-weight: bold; max-width: 1000px; margin: 0 auto; text-align: left; }
+.emergency-alert { display: none; background: #fef2f2; color: #dc2626; border-bottom: 1px solid #fecaca; padding: 12px 20px; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.5; }
 .main-container { max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 40px; box-sizing: border-box; flex: 1; }
 .profile-section { display: flex; gap: 40px; align-items: flex-start; padding-bottom: 40px; justify-content: center; }
 @media (max-width: 600px) { .profile-section { flex-direction: column; align-items: center; gap: 20px; } }
@@ -38,3 +39,13 @@ header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; fon
 .btn.wish-link { background-color: #fffaf0; color: #dd6b20; border-color: #fbd38d; }
 .wish-text { font-size: 14px; color: #4a5568; line-height: 1.7; margin: 0 0 15px 0; text-align: left; }
 footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; border-top: 1px solid #e2e8f0; background-color: #ffffff; margin-top: auto; }
+
+.bio-detail-list { padding-left: 0; margin: 0; list-style: none; }
+.bio-detail-list li { font-size: 15px; color: #4a5568; line-height: 2.2; font-weight: bold; text-align: left; }
+.detail-item-title { color: #1a202c; font-weight: bold; margin-right: 5px; }
+
+.qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center; }
+.qr-modal-content { background: #ffffff; padding: 20px; border-radius: 12px; position: relative; max-width: 90%; width: 340px; box-sizing: border-box; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+.qr-modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; font-weight: bold; }
+.qr-modal-close:hover { color: #333333; }
+.qr-modal-img { width: 100%; height: auto; border-radius: 8px; display: block; margin-bottom: 10px; }
