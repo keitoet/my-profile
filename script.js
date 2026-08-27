@@ -5,6 +5,7 @@ function loadStatusFromJson() {
             const avatarContainer = document.getElementById('avatarContainer');
             const statusBadge = document.getElementById('statusBadge');
             const tagsContainer = document.getElementById('tagsContainer');
+            const emergencyAlert = document.getElementById('emergencyAlert');
 
             if (data.isOnline) {
                 avatarContainer.className = "avatar-container online";
@@ -16,6 +17,15 @@ function loadStatusFromJson() {
 
             if (data.tags) {
                 tagsContainer.innerHTML = data.tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+            }
+            
+            if (emergencyAlert) {
+                if (data.alert && data.alert.trim() !== "") {
+                    emergencyAlert.innerText = data.alert;
+                    emergencyAlert.style.display = "block";
+                } else {
+                    emergencyAlert.style.display = "none";
+                }
             }
             
             if (avatarContainer) {
