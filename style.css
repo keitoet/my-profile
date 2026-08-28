@@ -63,10 +63,9 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 
 /* 最近の出来事 */
 .news-list { list-style: none; padding: 0; margin: 0; }
-.news-list li { padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 14px; display: flex; align-items: center; }
+.news-list li { padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 14px; font-weight: bold; }
 .news-list li:last-child { border: none; }
-.news-date { color: #718096; padding-right: 25px; font-size: 13px; display: inline-block; }
-.news-text { flex: 1; color: #2d3748; }
+.news-list li a:hover { text-decoration: underline ; color: #3182ce ; }
 
 /* パンくずリスト */
 .breadcrumb { font-size: 13px ; color: #718096 ; margin-bottom: 30px ; }
