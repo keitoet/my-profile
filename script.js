@@ -24,7 +24,12 @@ function loadStatusFromJson() {
             
             if (emergencyAlert) {
                 if (data.alert && data.alert.trim() !== "") {
-                    emergencyAlert.innerText = data.alert;
+
+                    if (data.alertUrl) {
+                        emergencyAlert.innerHTML = `<a href="${data.alertUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${data.alert}</a>`;
+                    } else {
+                        emergencyAlert.innerText = data.alert;
+                    }
                     emergencyAlert.style.display = "block";
                 } else {
                     emergencyAlert.style.display = "none";
