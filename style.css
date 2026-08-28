@@ -63,10 +63,10 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 
 /* 最近の出来事 */
 .news-list { list-style: none; padding: 0; margin: 0; }
-.news-list li { padding: 12px 0; border-bottom: 1.5px dashed #a0aec0; font-size: 14px; font-weight: bold; }
+.news-list li { padding: 12px 0; border-bottom: 1px dashed #a0aec0; font-size: 14px; font-weight: bold; padding: 0; }
 .news-list li:last-child { border: none; }
-.news-list li a { display: block ; text-decoration: none ; color: #2d3748 ; width: 100% ; padding: 12px 0 ; }
-.news-list li a:hover { text-decoration: underline ; color: #3182ce ; }
+.news-list li a { display: block ; text-decoration: none ; color: #2d3748 ; width: 100% ; padding: 6px 0 ; }
+.news-list li a:hover { color: #3182ce ; text-decoration: underline ; }
 
 /* パンくずリスト */
 .breadcrumb { font-size: 13px ; color: #718096 ; margin-bottom: 30px ; }
@@ -77,4 +77,3 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 .news-title-line { font-size: 25px ; font-weight: bold ; color: #1a202c ; border-bottom: 2px solid #1a202c ; padding-bottom: 12px ; margin-bottom: 8px ; text-align: center ; }
 .news-date-right { text-align: right ; font-size: 15px ; color: #4a5568; margin-bottom: 25px ; display: block ; }
 .news-body-text { font-size: 15px ; line-height: 2.1 ; font-weight: 500 ; white-space: pre-wrap ; margin: 0 ; text-align: left ; display: block ; }
-.news-list li a:hover .news-text { text-decoration: underline ; color: #1a202c ; }
