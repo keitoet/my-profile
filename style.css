@@ -4,6 +4,7 @@ body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-s
 header, footer { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
 header { padding: 25px 40px; }
 header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; font-weight: bold; max-width: 1000px; margin: 0 auto; text-align: left; }
+header a:hover { opacity: 0.7 ; transition: opacity 0.2s ease ; }
 footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; border-top: 1px solid #e2e8f0; margin-top: auto; }
 
 /* 緊急通知・共通テキスト設定 */
@@ -69,8 +70,10 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 /* パンくずリスト */
 .breadcrumb { font-size: 13px ; color: #718096 ; margin-bottom: 30px ; }
 .breadcrumb a { color: #3182ce ; text-decoration: none ; }
+.breadcrumb a:hover { text-decoration: underline ; color: #2b6cb0 ; }
 
 /* タイトル、日付、本文 */
 .news-title-line { font-size: 25px ; font-weight: bold ; color: #1a202c ; border-bottom: 2px solid #1a202c ; padding-bottom: 12px ; margin-bottom: 8px ; text-align: center ; }
 .news-date-right { text-align: right ; font-size: 15px ; color: #4a5568; margin-bottom: 25px ; display: block ; }
 .news-body-text { font-size: 15px ; line-height: 2.1 ; font-weight: 500 ; white-space: pre-wrap ; margin: 0 ; text-align: left ; display: block ; }
+.news-list li a:hover .news-text { text-decoration: underline ; color: #1a202c ; }
