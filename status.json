@@ -1,6 +1,6 @@
 {
-  "isOnline": true,
-  "tags": ["話せる"],
+  "isOnline": false,
+  "tags": ["話せない","8/28は1日中話せません。"],
   "alert": "",
   "alertUrl": ""
 }
