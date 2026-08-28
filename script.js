@@ -1,5 +1,5 @@
 function loadStatusFromJson() {
-    fetch('status.json')
+    fetch('/my-profile/status.json')
         .then(response => response.json())
         .then(data => {
             const avatarContainer = document.getElementById('avatarContainer');
@@ -7,15 +7,18 @@ function loadStatusFromJson() {
             const tagsContainer = document.getElementById('tagsContainer');
             const emergencyAlert = document.getElementById('emergencyAlert');
 
-            if (data.isOnline) {
-                avatarContainer.className = "avatar-container online";
-                statusBadge.innerHTML = '<span class="dot"></span>はなせる';
-            } else {
-                avatarContainer.className = "avatar-container offline";
-                statusBadge.innerHTML = '<span class="dot"></span>ねてる';
+            if (avatarContainer && statusBadge) {
+                if (data.isOnline) {
+                    avatarContainer.className = "avatar-container online";
+                    statusBadge.innerHTML = '<span class="dot"></span>はなせる';
+                } else {
+                    avatarContainer.className = "avatar-container offline";
+                    statusBadge.innerHTML = '<span class="dot"></span>ねてる';
+                }
+                avatarContainer.style.opacity = "1";
             }
 
-            if (data.tags) {
+            if (tagsContainer && data.tags) {
                 tagsContainer.innerHTML = data.tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
             }
             
@@ -27,21 +30,18 @@ function loadStatusFromJson() {
                     emergencyAlert.style.display = "none";
                 }
             }
-            
-            if (avatarContainer) {
-                avatarContainer.style.opacity = "1";
-            }
         })
         .catch(error => console.error('Error loading status:', error));
 }
 
 function loadNewsFromJson() {
-    fetch('news.json')
+    const newsList = document.getElementById('newsList');
+    if (!newsList) return;
+
+    fetch('/my-profile/news.json')
         .then(response => response.json())
         .then(data => {
-            const newsList = document.getElementById('newsList');
-            if (newsList && data) {
-
+            if (data) {
                 newsList.innerHTML = data.map(item => `
                     <li>
                         <a href="${item.url}" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
@@ -55,7 +55,26 @@ function loadNewsFromJson() {
         .catch(error => console.error('Error loading news:', error));
 }
 
+function loadSharedComponents() {
+    fetch('/my-profile/shared.html')
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const headerEl = document.querySelector('header');
+            const footerEl = document.querySelector('footer');
+            const sharedHeader = doc.getElementById('commonHeader');
+            const sharedFooter = doc.getElementById('commonFooter');
+
+            if (headerEl && sharedHeader) headerEl.innerHTML = sharedHeader.innerHTML;
+            if (footerEl && sharedFooter) footerEl.innerHTML = sharedFooter.innerHTML;
+        })
+        .catch(error => console.error('Error loading shared components:', error));
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+    loadSharedComponents();
     loadStatusFromJson();
     loadNewsFromJson();
 });
