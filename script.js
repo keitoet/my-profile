@@ -44,8 +44,8 @@ function loadNewsFromJson() {
 
                 newsList.innerHTML = data.map(item => `
                     <li>
-                        <span class="news-date">${item.date}</span>
-                        <a href="${item.url}" class="news-link" style="text-decoration: none; color: inherit; flex: 1;">
+                        <a href="${item.url}" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
+                            <span class="news-date">${item.date}</span>
                             <span class="news-text">${item.text}</span>
                         </a>
                     </li>
