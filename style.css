@@ -65,3 +65,12 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 .news-list li:last-child { border: none; }
 .news-date { color: #718096; padding-right: 25px; font-size: 13px; display: inline-block; }
 .news-text { flex: 1; color: #2d3748; }
+
+/* パンくずリスト */
+.breadcrumb { font-size: 13px ; color: #718096 ; margin-bottom: 30px ; }
+.breadcrumb a { color: #3182ce ; text-decoration: none ; }
+
+/* タイトル、日付、本文 */
+.news-title-line { font-size: 25px ; font-weight: bold ; color: #1a202c ; border-bottom: 2px solid #1a202c ; padding-bottom: 12px ; margin-bottom: 8px ; text-align: center ; }
+.news-date-right { text-align: right ; font-size: 15px ; color: #4a5568; margin-bottom: 25px ; display: block ; }
+.news-body-text { font-size: 15px ; line-height: 2.1 ; font-weight: 500 ; white-space: pre-wrap ; margin: 0 ; text-align: left ; display: block ; }
