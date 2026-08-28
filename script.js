@@ -24,7 +24,6 @@ function loadStatusFromJson() {
             
             if (emergencyAlert) {
                 if (data.alert && data.alert.trim() !== "") {
-
                     if (data.alertUrl) {
                         emergencyAlert.innerHTML = `<a href="${data.alertUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${data.alert}</a>`;
                     } else {
@@ -47,11 +46,11 @@ function loadNewsFromJson() {
         .then(response => response.json())
         .then(data => {
             if (data) {
+
                 newsList.innerHTML = data.map(item => `
                     <li>
-                        <a href="${item.url}" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
-                            <span class="news-date">${item.date}</span>
-                            <span class="news-text">${item.text}</span>
+                        <a href="${item.url}" style="text-decoration: none; color: inherit; display: block; width: 100%;">
+                            ${item.date}　${item.text}
                         </a>
                     </li>
                 `).join('');
