@@ -10,7 +10,7 @@ function loadStatusFromJson() {
             if (avatarContainer && statusBadge) {
                 if (data.isOnline) {
                     avatarContainer.className = "avatar-container online";
-                    statusBadge.innerHTML = '<span class="dot"></span>話せる';
+                    statusBadge.innerHTML = '<span class="dot"></span>話せます';
                 } else {
                     avatarContainer.className = "avatar-container offline";
                     statusBadge.innerHTML = '<span class="dot"></span>話せない';
