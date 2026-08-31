@@ -1,13 +1,5 @@
-function loadStatusFromMicroCMS() {
-    // ★ ここに「読み込み用キー」を入れます（見られても安全です！）
-    const microCmsUrl = 'https://keitoet.microcms.io/api/v1/status';
-    const readApiKey = 'EnQLezpREbVUD4lz3dco6o7QbtisuOp4HoUr';
-
-    fetch(microCmsUrl, {
-        headers: {
-            'X-MICROCMS-API-KEY': readApiKey
-        }
-    })
+function loadStatusFromJson() {
+    fetch('/my-profile/status.json')
         .then(response => response.json())
         .then(data => {
             const avatarContainer = document.getElementById('avatarContainer');
@@ -43,7 +35,7 @@ function loadStatusFromMicroCMS() {
                 }
             }
         })
-        .catch(error => console.error('Error loading status from microCMS:', error));
+        .catch(error => console.error('Error loading status:', error));
 }
 
 function loadNewsFromJson() {
@@ -54,6 +46,7 @@ function loadNewsFromJson() {
         .then(response => response.json())
         .then(data => {
             if (data) {
+
                 newsList.innerHTML = data.map(item => `
                     <li>
                         <a href="${item.url}" style="text-decoration: none; color: inherit; display: block; width: 100%;">
@@ -86,7 +79,7 @@ function loadSharedComponents() {
 
 window.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromMicroCMS();
+    loadStatusFromJson();
     loadNewsFromJson();
 });
 
