@@ -18,7 +18,6 @@ function loadStatusFromSheet() {
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            // 💡 スプレッドシートの列（A列=0, B列=1, C列=2, D列=3, E列=4）の部屋番号に完璧に修正しました！
             const statusText = cleanText(targetRow[1]);   
             const tagsText = cleanText(targetRow[2]);     
             const alertText = cleanText(targetRow[3]);    
