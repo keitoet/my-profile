@@ -1,49 +1,28 @@
-const SPREADSHEET_ID = '1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI';
-// ://google.com が抜けてしまっていました！
-const SHEET_URL = `https://://google.com${SPREADSHEET_ID}/export?format=csv`;
-
-
-function showDebugOnScreen(title, content) {
-    const emergencyAlert = document.getElementById('emergencyAlert');
-    if (emergencyAlert) {
-        emergencyAlert.innerHTML = `
-            <div style="color: #1a202c; background: #fff0f0; padding: 15px; border: 2px solid red; font-size: 14px; text-align: left; font-weight: bold; line-height: 1.6;">
-                <span style="color: red; font-size: 16px;">⚠️ ${title}</span><br><br>
-                ⬇️ 【プログラムがGoogleから実際に受信した生データ】 ⬇️
-                <pre style="background: #2d3748; color: #fff; padding: 10px; border-radius: 6px; overflow-x: auto; font-family: monospace; font-size: 12px; margin-top: 5px;">${content}</pre>
-                <br>
-                💡 もし上の黒い箱が空っぽ（何も書かれていない）なら、URLが開けていません。<br>
-                シートのメニューから「ファイル」➔「共有」➔「ウェブに公開」をポチッと押して公開状態にしてください！
-            </div>
-        `;
-        emergencyAlert.style.display = "block";
-    }
-}
+// 💡 慧斗くんのシートIDと、本物の正しいGoogleのURL（://google.com...）をガチッと合体させました！
+const SHEET_URL = 'https://://google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromSheet() {
     const avatarContainer = document.getElementById('avatarContainer');
     const statusBadge = document.getElementById('statusBadge');
     const tagsContainer = document.getElementById('tagsContainer');
+    const emergencyAlert = document.getElementById('emergencyAlert');
 
     fetch(SHEET_URL)
         .then(res => {
-            if (!res.ok) throw new Error(`通信エラー (HTTP: ${res.status})`);
+            if (!res.ok) throw new Error('通信エラー');
             return res.text();
         })
         .then(csvText => {
-            // 💡 通信が成功したら、届いた生テキストをそのまま画面の黒い箱の中に映し出します！
-            showDebugOnScreen('URLの読み込み自体は成功しています！データの中身をチェック中...', csvText || '[空っぽです]');
-
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
-            const targetRow = lines[2];
+            const targetRow = lines[2]; // 💡 3行目のデータを正確に取得
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            const statusText = cleanText(targetRow[1]);   
-            const tagsText = cleanText(targetRow[2]);     
-            const alertText = cleanText(targetRow[3]);    
-            const alertUrlText = cleanText(targetRow[4]); 
+            const statusText = cleanText(targetRow[1]);   // B列：話せるかどうか
+            const tagsText = cleanText(targetRow[2]);     // C列：タグ
+            const alertText = cleanText(targetRow[3]);    // D列：アラート
+            const alertUrlText = cleanText(targetRow[4]); // E列：url
 
             const isOnline = (statusText === '話せる');
             const tagsArray = tagsText ? tagsText.split('/').map(t => t.trim()) : [];
@@ -61,12 +40,24 @@ function loadStatusFromSheet() {
 
             if (tagsContainer && tagsArray.length > 0 && tagsArray[0] !== "") {
                 tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+            } else if (tagsContainer) {
+                tagsContainer.innerHTML = '';
+            }
+            
+            if (emergencyAlert) {
+                if (alertText && alertText !== "") {
+                    if (alertUrlText) {
+                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                    } else {
+                        emergencyAlert.innerText = alertText;
+                    }
+                    emergencyAlert.style.display = "block";
+                } else {
+                    emergencyAlert.style.display = "none";
+                }
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showDebugOnScreen('通信そのものに失敗しました（URLが開けません）', error.message);
-        });
+        .catch(error => console.error('Error loading status from Sheet:', error));
 }
 
 function loadNewsFromJson() {
