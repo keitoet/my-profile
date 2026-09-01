@@ -1,5 +1,4 @@
-// 💡 慧斗くんのシートIDと、本物の正しいGoogleのURL（://google.com...）をガチッと合体させました！
-const SHEET_URL = 'https://://google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromSheet() {
     const avatarContainer = document.getElementById('avatarContainer');
@@ -16,13 +15,14 @@ function loadStatusFromSheet() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
-            const targetRow = lines[2]; // 💡 3行目のデータを正確に取得
+            const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            const statusText = cleanText(targetRow[1]);   // B列：話せるかどうか
-            const tagsText = cleanText(targetRow[2]);     // C列：タグ
-            const alertText = cleanText(targetRow[3]);    // D列：アラート
-            const alertUrlText = cleanText(targetRow[4]); // E列：url
+            // 💡 スプレッドシートの列（A列=0, B列=1, C列=2, D列=3, E列=4）の部屋番号に完璧に修正しました！
+            const statusText = cleanText(targetRow[1]);   
+            const tagsText = cleanText(targetRow[2]);     
+            const alertText = cleanText(targetRow[3]);    
+            const alertUrlText = cleanText(targetRow[4]); 
 
             const isOnline = (statusText === '話せる');
             const tagsArray = tagsText ? tagsText.split('/').map(t => t.trim()) : [];
@@ -38,10 +38,12 @@ function loadStatusFromSheet() {
                 avatarContainer.style.opacity = "1";
             }
 
-            if (tagsContainer && tagsArray.length > 0 && tagsArray[0] !== "") {
-                tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
-            } else if (tagsContainer) {
-                tagsContainer.innerHTML = '';
+            if (tagsContainer) {
+                if (tagsArray.length > 0 && tagsArray[0] !== "") {
+                    tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+                } else {
+                    tagsContainer.innerHTML = '';
+                }
             }
             
             if (emergencyAlert) {
