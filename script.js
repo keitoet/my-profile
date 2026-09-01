@@ -2,6 +2,14 @@
 const SPREADSHEET_ID = '1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI';
 const SHEET_URL = `https://google.com{SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
 
+function showErrorOnScreen(message) {
+    const emergencyAlert = document.getElementById('emergencyAlert');
+    if (emergencyAlert) {
+        emergencyAlert.innerHTML = `<div style="color: red; background: #fff0f0; padding: 15px; border: 2px solid red; font-size: 14px; text-align: left; font-weight: bold;">⚠️ 【スプレッドシート読み込みエラー】<br>${message}<br><br>💡 チェックリスト：<br>1. シートの「ファイル」➔「共有」➔「ウェブに公開」を押しましたか？<br>2. ID（URLの間の文字）は1文字の間違いもなく合っていますか？</div>`;
+        emergencyAlert.style.display = "block";
+    }
+}
+
 function loadStatusFromSheet() {
     const avatarContainer = document.getElementById('avatarContainer');
     const statusBadge = document.getElementById('statusBadge');
@@ -9,21 +17,31 @@ function loadStatusFromSheet() {
     const emergencyAlert = document.getElementById('emergencyAlert');
 
     fetch(SHEET_URL)
-        .then(res => res.text())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`インターネット通信エラー (HTTPステータス: ${res.status})`);
+            }
+            return res.text();
+        })
         .then(text => {
+            if (!text.includes('{') || !text.includes('}')) {
+                throw new Error('スプレッドシートから正しいデータが返ってきていません。「ウェブに公開」がされているか確認してください。');
+            }
+            
             const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const json = JSON.parse(jsonString);
             const rows = json.table.rows;
             
-            // 💡 3行目のデータをピンポイントで指定して取得します
-            if (!rows || rows.length < 2) return;
+            if (!rows || rows.length < 2) {
+                throw new Error('スプレッドシートの3行目にデータが見つかりません。2行目が項目名、3行目がデータになっているか確認してください。');
+            }
+            
             const cols = rows[1].c; 
 
-            // 💡 スプレッドシートの列（B列〜E列）に完全に合わせました
-            const statusText = cols[1] ? cols[1].v : '';     // B列：話せるかどうか
-            const tagsText = cols[2] ? cols[2].v : '';       // C列：タグ
-            const alertText = cols[3] ? cols[3].v : '';      // D列：アラート
-            const alertUrlText = cols[4] ? cols[4].v : '';   // E列：url
+            const statusText = cols[1] ? cols[1].v : '';     
+            const tagsText = cols[2] ? cols[2].v : '';       
+            const alertText = cols[3] ? cols[3].v : '';      
+            const alertUrlText = cols[4] ? cols[4].v : '';   
 
             const isOnline = (statusText === '話せる');
             const tagsArray = tagsText ? tagsText.toString().split(',').map(t => t.trim()) : [];
@@ -58,7 +76,10 @@ function loadStatusFromSheet() {
                 }
             }
         })
-        .catch(error => console.error('Error loading status from Sheet:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorOnScreen(error.message);
+        });
 }
 
 function loadNewsFromJson() {
