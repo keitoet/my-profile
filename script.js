@@ -1,5 +1,7 @@
 const SPREADSHEET_ID = '1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI';
-const SHEET_URL = `https://google.com{SPREADSHEET_ID}/export?format=csv`;
+// ://google.com が抜けてしまっていました！
+const SHEET_URL = `https://://google.com${SPREADSHEET_ID}/export?format=csv`;
+
 
 function showDebugOnScreen(title, content) {
     const emergencyAlert = document.getElementById('emergencyAlert');
