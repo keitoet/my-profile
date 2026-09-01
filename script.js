@@ -1,11 +1,19 @@
-// 🌟 あなたのスプレッドシートIDをここに貼り付けてね！
 const SPREADSHEET_ID = '1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI';
-const SHEET_URL = `https://google.com{SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
+const SHEET_URL = `https://google.com{SPREADSHEET_ID}/export?format=csv`;
 
-function showErrorOnScreen(message) {
+function showDebugOnScreen(title, content) {
     const emergencyAlert = document.getElementById('emergencyAlert');
     if (emergencyAlert) {
-        emergencyAlert.innerHTML = `<div style="color: red; background: #fff0f0; padding: 15px; border: 2px solid red; font-size: 14px; text-align: left; font-weight: bold;">⚠️ 【スプレッドシート読み込みエラー】<br>${message}<br><br>💡 チェックリスト：<br>1. シートの「ファイル」➔「共有」➔「ウェブに公開」を押しましたか？<br>2. ID（URLの間の文字）は1文字の間違いもなく合っていますか？</div>`;
+        emergencyAlert.innerHTML = `
+            <div style="color: #1a202c; background: #fff0f0; padding: 15px; border: 2px solid red; font-size: 14px; text-align: left; font-weight: bold; line-height: 1.6;">
+                <span style="color: red; font-size: 16px;">⚠️ ${title}</span><br><br>
+                ⬇️ 【プログラムがGoogleから実際に受信した生データ】 ⬇️
+                <pre style="background: #2d3748; color: #fff; padding: 10px; border-radius: 6px; overflow-x: auto; font-family: monospace; font-size: 12px; margin-top: 5px;">${content}</pre>
+                <br>
+                💡 もし上の黒い箱が空っぽ（何も書かれていない）なら、URLが開けていません。<br>
+                シートのメニューから「ファイル」➔「共有」➔「ウェブに公開」をポチッと押して公開状態にしてください！
+            </div>
+        `;
         emergencyAlert.style.display = "block";
     }
 }
@@ -14,37 +22,29 @@ function loadStatusFromSheet() {
     const avatarContainer = document.getElementById('avatarContainer');
     const statusBadge = document.getElementById('statusBadge');
     const tagsContainer = document.getElementById('tagsContainer');
-    const emergencyAlert = document.getElementById('emergencyAlert');
 
     fetch(SHEET_URL)
         .then(res => {
-            if (!res.ok) {
-                throw new Error(`インターネット通信エラー (HTTPステータス: ${res.status})`);
-            }
+            if (!res.ok) throw new Error(`通信エラー (HTTP: ${res.status})`);
             return res.text();
         })
-        .then(text => {
-            if (!text.includes('{') || !text.includes('}')) {
-                throw new Error('スプレッドシートから正しいデータが返ってきていません。「ウェブに公開」がされているか確認してください。');
-            }
-            
-            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-            const json = JSON.parse(jsonString);
-            const rows = json.table.rows;
-            
-            if (!rows || rows.length < 2) {
-                throw new Error('スプレッドシートの3行目にデータが見つかりません。2行目が項目名、3行目がデータになっているか確認してください。');
-            }
-            
-            const cols = rows[1].c; 
+        .then(csvText => {
+            // 💡 通信が成功したら、届いた生テキストをそのまま画面の黒い箱の中に映し出します！
+            showDebugOnScreen('URLの読み込み自体は成功しています！データの中身をチェック中...', csvText || '[空っぽです]');
 
-            const statusText = cols[1] ? cols[1].v : '';     
-            const tagsText = cols[2] ? cols[2].v : '';       
-            const alertText = cols[3] ? cols[3].v : '';      
-            const alertUrlText = cols[4] ? cols[4].v : '';   
+            const lines = csvText.split('\n').map(line => line.split(','));
+            if (!lines || lines.length < 3) return;
+            
+            const targetRow = lines[2];
+            const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+
+            const statusText = cleanText(targetRow[1]);   
+            const tagsText = cleanText(targetRow[2]);     
+            const alertText = cleanText(targetRow[3]);    
+            const alertUrlText = cleanText(targetRow[4]); 
 
             const isOnline = (statusText === '話せる');
-            const tagsArray = tagsText ? tagsText.toString().split(',').map(t => t.trim()) : [];
+            const tagsArray = tagsText ? tagsText.split('/').map(t => t.trim()) : [];
 
             if (avatarContainer && statusBadge) {
                 if (isOnline) {
@@ -57,28 +57,13 @@ function loadStatusFromSheet() {
                 avatarContainer.style.opacity = "1";
             }
 
-            if (tagsContainer && tagsArray.length > 0) {
+            if (tagsContainer && tagsArray.length > 0 && tagsArray[0] !== "") {
                 tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
-            } else if (tagsContainer) {
-                tagsContainer.innerHTML = '';
-            }
-            
-            if (emergencyAlert) {
-                if (alertText && alertText.toString().trim() !== "") {
-                    if (alertUrlText) {
-                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
-                    } else {
-                        emergencyAlert.innerText = alertText;
-                    }
-                    emergencyAlert.style.display = "block";
-                } else {
-                    emergencyAlert.style.display = "none";
-                }
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showErrorOnScreen(error.message);
+            showDebugOnScreen('通信そのものに失敗しました（URLが開けません）', error.message);
         });
 }
 
@@ -123,9 +108,5 @@ window.addEventListener('DOMContentLoaded', () => {
     loadNewsFromJson();
 });
 
-function openQrModal() {
-    document.getElementById('qrModal').style.display = 'flex';
-}
-function closeQrModal() {
-    document.getElementById('qrModal').style.display = 'none';
-}
+function openQrModal() { document.getElementById('qrModal').style.display = 'flex'; }
+function closeQrModal() { document.getElementById('qrModal').style.display = 'none'; }
