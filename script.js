@@ -1,38 +1,32 @@
-// 【重要】あなたのスプレッドシートIDに書き換えてください
-const SPREADSHEET_ID = "1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI";
+// 🌟 あなたのスプレッドシートIDをここに貼り付けてね！
+const SPREADSHEET_ID = '1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI';
+const SHEET_URL = `https://google.com{SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
 
-function loadStatusFromJson() {
-    // 画像に合わせて、B3セルからE3セルまでの範囲をピンポイントで取得します
-    const sheetUrl = `https://google.com{SPREADSHEET_ID}/gviz/tq?range=B3:E3&tqx=out:json`;
+function loadStatusFromSheet() {
+    const avatarContainer = document.getElementById('avatarContainer');
+    const statusBadge = document.getElementById('statusBadge');
+    const tagsContainer = document.getElementById('tagsContainer');
+    const emergencyAlert = document.getElementById('emergencyAlert');
 
-    fetch(sheetUrl)
-        .then(response => response.text())
+    fetch(SHEET_URL)
+        .then(res => res.text())
         .then(text => {
-            const json = JSON.parse(text.substring(47, text.length - 2));
-            const row = json.table.rows[0]; // 3行目のデータを取得
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const json = JSON.parse(jsonString);
+            const rows = json.table.rows;
             
-            // 各セルのデータを安全に抽出する補助関数
-            const getVal = (index) => (row && row.c[index]) ? row.c[index].v : "";
+            // 💡 3行目のデータをピンポイントで指定して取得します
+            if (!rows || rows.length < 2) return;
+            const cols = rows[1].c; 
 
-            // --- 画像の列の並び順（B列〜E列）に完全に合わせました ---
-            // B3セル: 「話せるかどうか」が「話せる」ならtrue
-            const isOnline = (getVal(0) === "話せる"); 
-            
-            // C3セル: 「タグ」（カンマ区切り。画像だと「普通」が入っていますね）
-            const rawTags = getVal(1);
-            const tags = rawTags ? rawTags.split(",").map(t => t.trim()).filter(t => t) : [];
-            
-            // D3セル: 「アラート」
-            const alert = getVal(2);
-            
-            // E3セル: 「url」
-            const alertUrl = getVal(3);
-            // -------------------------------------------------------------
+            // 💡 スプレッドシートの列（B列〜E列）に完全に合わせました
+            const statusText = cols[1] ? cols[1].v : '';     // B列：話せるかどうか
+            const tagsText = cols[2] ? cols[2].v : '';       // C列：タグ
+            const alertText = cols[3] ? cols[3].v : '';      // D列：アラート
+            const alertUrlText = cols[4] ? cols[4].v : '';   // E列：url
 
-            const avatarContainer = document.getElementById('avatarContainer');
-            const statusBadge = document.getElementById('statusBadge');
-            const tagsContainer = document.getElementById('tagsContainer');
-            const emergencyAlert = document.getElementById('emergencyAlert');
+            const isOnline = (statusText === '話せる');
+            const tagsArray = tagsText ? tagsText.toString().split(',').map(t => t.trim()) : [];
 
             if (avatarContainer && statusBadge) {
                 if (isOnline) {
@@ -45,18 +39,18 @@ function loadStatusFromJson() {
                 avatarContainer.style.opacity = "1";
             }
 
-            if (tagsContainer && tags.length > 0) {
-                tagsContainer.innerHTML = tags.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+            if (tagsContainer && tagsArray.length > 0) {
+                tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
             } else if (tagsContainer) {
-                tagsContainer.innerHTML = ''; 
+                tagsContainer.innerHTML = '';
             }
             
             if (emergencyAlert) {
-                if (alert && alert.trim() !== "") {
-                    if (alertUrl) {
-                        emergencyAlert.innerHTML = `<a href="${alertUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alert}</a>`;
+                if (alertText && alertText.toString().trim() !== "") {
+                    if (alertUrlText) {
+                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                     } else {
-                        emergencyAlert.innerText = alert;
+                        emergencyAlert.innerText = alertText;
                     }
                     emergencyAlert.style.display = "block";
                 } else {
@@ -64,5 +58,53 @@ function loadStatusFromJson() {
                 }
             }
         })
-        .catch(error => console.error('Error loading status from Spreadsheet:', error));
+        .catch(error => console.error('Error loading status from Sheet:', error));
+}
+
+function loadNewsFromJson() {
+    const newsList = document.getElementById('newsList');
+    if (!newsList) return;
+    fetch('/my-profile/news.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                newsList.innerHTML = data.map(item => `
+                    <li>
+                        <a href="${item.url}" style="text-decoration: none; color: inherit; display: block; width: 100%;">
+                            ${item.date}　${item.text}
+                        </a>
+                    </li>
+                `).join('');
+            }
+        })
+        .catch(error => console.error('Error loading news:', error));
+}
+
+function loadSharedComponents() {
+    fetch('/my-profile/shared.html')
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const headerEl = document.querySelector('header');
+            const footerEl = document.querySelector('footer');
+            const sharedHeader = doc.getElementById('commonHeader');
+            const sharedFooter = doc.getElementById('commonFooter');
+            if (headerEl && sharedHeader) headerEl.innerHTML = sharedHeader.innerHTML;
+            if (footerEl && sharedFooter) footerEl.innerHTML = sharedFooter.innerHTML;
+        })
+        .catch(error => console.error('Error loading shared components:', error));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadSharedComponents();
+    loadStatusFromSheet();
+    loadNewsFromJson();
+});
+
+function openQrModal() {
+    document.getElementById('qrModal').style.display = 'flex';
+}
+function closeQrModal() {
+    document.getElementById('qrModal').style.display = 'none';
 }
